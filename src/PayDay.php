@@ -64,7 +64,11 @@ class PayDay
             $payDayCollection->attach($payDay);
 
             $this->startDate->modify('next month');
-        } while (((int) $lastMonth->format('m') + 1) !== (int) $this->startDate->format('m'));
+            $lastMonthModifier = ((int) $lastMonth->format('m') + 1);
+            if (12 < $lastMonthModifier) {
+                $lastMonthModifier = 1;
+            }
+        } while ($lastMonthModifier !== (int) $this->startDate->format('m'));
         return $payDayCollection;
     }
 
