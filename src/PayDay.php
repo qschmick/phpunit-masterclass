@@ -37,6 +37,7 @@ class PayDay
      */
     public function __construct(\DateTime $startDate)
     {
+        $startDate->setDate($startDate->format('Y'), $startDate->format('m'), 1);
         $this->startDate = $startDate;
     }
 
