@@ -37,6 +37,12 @@ php -r "unlink('composer-setup.php');"
 
 Or download the PHAR package directly at [getcomposer.org/composer.phar](https://getcomposer.org/composer.phar).
 
+Once composer is installed, we can start installing the required packages. We're using `composer` as command, but if you have downloaded the PHAR file, remember to use `php composer.phar` instead.
+
+```bash
+composer install
+```
+
 ## Source code license
 
 This source code is provided for free by In2it as part of [PHPUnit Masterclass](https://www.in2it.be/training-courses/phpunit-masterclass/) and is licensed with [Apache License 2.0](LICENSE). Copyright 2009 - 2017 © [In2it](https://www.in2it.be). All rights reserved.
