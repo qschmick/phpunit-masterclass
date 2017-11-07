@@ -49,10 +49,11 @@ class PayDayTest extends TestCase
      */
     public function testPayDayReturnsPayDayEntities(\Iterator $result)
     {
-        $expectedYear = '2017';
-        $expectedMonth = 'November';
-        $expectedMidPayday = '2017-11-20';
-        $expectedEndPayday = '2017-11-24';
+        $now = new \DateTime('now', new \DateTimeZone(PayDay::APP_TIMEZONE));
+        $expectedYear = $now->format('Y');
+        $expectedMonth = $now->format('F');
+        $expectedMidPayday = $now->format('Y') . '-' . $now->format('m');
+        $expectedEndPayday = $now->format('Y') . '-' . $now->format('m');
 
         $result->rewind();
         $firstEntry = $result->current();
@@ -60,7 +61,7 @@ class PayDayTest extends TestCase
         $this->assertInstanceOf(\stdClass::class, $firstEntry);
         $this->assertSame($expectedYear, $firstEntry->year);
         $this->assertSame($expectedMonth, $firstEntry->month);
-        $this->assertSame($expectedMidPayday, $firstEntry->midPayday);
-        $this->assertSame($expectedEndPayday, $firstEntry->endPayday);
+        $this->assertStringStartsWith($expectedMidPayday, $firstEntry->midPayday);
+        $this->assertStringStartsWith($expectedEndPayday, $firstEntry->endPayday);
     }
 }

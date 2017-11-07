@@ -25,32 +25,33 @@ class PayDay
 {
     const APP_TIMEZONE = 'Europe/Brussels';
 
-    /**
-     * Method that will calculate payment days for salaries
-     *
-     * @return \Iterator
-     */
-    public function calculatePayDay(): \Iterator
-    {
-        $date = new \DateTime('now', new \DateTimeZone(self::APP_TIMEZONE));
-        $lastMonth = new \DateTime('last month', new \DateTimeZone(self::APP_TIMEZONE));
-        $payDayCollection = new \SplObjectStorage();
+/**
+ * Method that will calculate payment days for salaries
+ *
+ * @return \Iterator
+ * @todo Refactor so start date is not hard-coded in the class
+ */
+public function calculatePayDay(): \Iterator
+{
+    $date = new \DateTime('now', new \DateTimeZone(self::APP_TIMEZONE));
+    $lastMonth = new \DateTime('last month', new \DateTimeZone(self::APP_TIMEZONE));
+    $payDayCollection = new \SplObjectStorage();
 
-        do {
-            $midPayday = $this->calculateMiddlePayday((int)$date->format('Y'), (int)$date->format('m'));
-            $endPayday = $this->calculateEndPayday((int)$date->format('Y'), (int)$date->format('m'));
+    do {
+        $midPayday = $this->calculateMiddlePayday((int)$date->format('Y'), (int)$date->format('m'));
+        $endPayday = $this->calculateEndPayday((int)$date->format('Y'), (int)$date->format('m'));
 
-            $payDay = new \stdClass();
-            $payDay->year = $date->format('Y');
-            $payDay->month = $date->format('F');
-            $payDay->midPayday = $midPayday->format('Y-m-d');
-            $payDay->endPayday = $endPayday->format('Y-m-d');
-            $payDayCollection->attach($payDay);
+        $payDay = new \stdClass();
+        $payDay->year = $date->format('Y');
+        $payDay->month = $date->format('F');
+        $payDay->midPayday = $midPayday->format('Y-m-d');
+        $payDay->endPayday = $endPayday->format('Y-m-d');
+        $payDayCollection->attach($payDay);
 
-            $date->modify('next month');
-        } while (((int) $lastMonth->format('m') + 1) !== (int) $date->format('m'));
-        return $payDayCollection;
-    }
+        $date->modify('next month');
+    } while (((int) $lastMonth->format('m') + 1) !== (int) $date->format('m'));
+    return $payDayCollection;
+}
 
     /**
      * Calculates the middle payment date for a given month in a given year
