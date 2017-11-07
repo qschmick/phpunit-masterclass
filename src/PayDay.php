@@ -11,7 +11,7 @@
  * @see https://www.in2it.be/training-courses/phpunit-masterclass/
  */
 
-namespace in2it\Masterclass;
+namespace In2it\Masterclass;
 
 /**
  * Class PayDay
