@@ -23,6 +23,8 @@ class PayDayTest extends TestCase
      * Testing that we're getting 12 entries back from the
      * PayDay application.
      *
+     * @return \Iterator
+     *
      * @covers \In2it\Masterclass\PayDay::calculatePayDay
      */
     public function testPayDayReturnsTwelveEntries()
@@ -32,6 +34,7 @@ class PayDayTest extends TestCase
         $result = $payday->calculatePayDay();
         $this->assertInstanceOf(\Iterator::class, $result);
         $this->assertSame($expectedCount, \iterator_count($result));
+        return $result;
     }
 
 
@@ -39,18 +42,17 @@ class PayDayTest extends TestCase
      * Testing that our application returns indeed entries
      * for PayDays
      *
+     * @param \Iterator $result
+     *
      * @covers \In2it\Masterclass\PayDay::calculatePayDay
+     * @depends testPayDayReturnsTwelveEntries
      */
-    public function testPayDayReturnsPayDayEntities()
+    public function testPayDayReturnsPayDayEntities(\Iterator $result)
     {
-        $payday = new PayDay();
-
         $expectedYear = '2017';
         $expectedMonth = 'November';
         $expectedMidPayday = '2017-11-20';
         $expectedEndPayday = '2017-11-24';
-
-        $result = $payday->calculatePayDay();
 
         $result->rewind();
         $firstEntry = $result->current();
