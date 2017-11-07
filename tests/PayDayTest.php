@@ -33,4 +33,32 @@ class PayDayTest extends TestCase
         $this->assertInstanceOf(\Iterator::class, $result);
         $this->assertSame($expectedCount, \iterator_count($result));
     }
+
+
+    /**
+     * Testing that our application returns indeed entries
+     * for PayDays
+     *
+     * @covers \In2it\Masterclass\PayDay::calculatePayDay
+     */
+    public function testPayDayReturnsPayDayEntities()
+    {
+        $payday = new PayDay();
+
+        $expectedYear = '2017';
+        $expectedMonth = 'November';
+        $expectedMidPayday = '2017-11-20';
+        $expectedEndPayday = '2017-11-24';
+
+        $result = $payday->calculatePayDay();
+
+        $result->rewind();
+        $firstEntry = $result->current();
+
+        $this->assertInstanceOf(\stdClass::class, $firstEntry);
+        $this->assertSame($expectedYear, $firstEntry->year);
+        $this->assertSame($expectedMonth, $firstEntry->month);
+        $this->assertSame($expectedMidPayday, $firstEntry->midPayday);
+        $this->assertSame($expectedEndPayday, $firstEntry->endPayday);
+    }
 }
