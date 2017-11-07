@@ -20,6 +20,22 @@ use PHPUnit\Framework\TestCase;
 class PayDayTest extends TestCase
 {
     /**
+     * @var \DateTime
+     */
+    protected $today;
+
+    protected function setUp()
+    {
+        parent::setUp();
+        $this->today = new \DateTime('2017-09-15', new \DateTimeZone('Europe/Amsterdam'));
+    }
+
+    protected function tearDown()
+    {
+        $this->today = null;
+        parent::tearDown();
+    }
+    /**
      * Testing that we're getting 12 entries back from the
      * PayDay application.
      *
@@ -29,7 +45,7 @@ class PayDayTest extends TestCase
      */
     public function testPayDayReturnsTwelveEntries()
     {
-        $payday = new PayDay();
+        $payday = new PayDay($this->today);
         $expectedCount = 12;
         $result = $payday->calculatePayDay();
         $this->assertInstanceOf(\Iterator::class, $result);
@@ -49,11 +65,10 @@ class PayDayTest extends TestCase
      */
     public function testPayDayReturnsPayDayEntities(\Iterator $result)
     {
-        $now = new \DateTime('now', new \DateTimeZone(PayDay::APP_TIMEZONE));
-        $expectedYear = $now->format('Y');
-        $expectedMonth = $now->format('F');
-        $expectedMidPayday = $now->format('Y') . '-' . $now->format('m');
-        $expectedEndPayday = $now->format('Y') . '-' . $now->format('m');
+        $expectedYear = $this->today->format('Y');
+        $expectedMonth = $this->today->format('F');
+        $expectedMidPayday = $this->today->format('Y') . '-' . $this->today->format('m');
+        $expectedEndPayday = $this->today->format('Y') . '-' . $this->today->format('m');
 
         $result->rewind();
         $firstEntry = $result->current();

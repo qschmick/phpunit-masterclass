@@ -15,7 +15,9 @@ use In2it\Masterclass\PayDay;
 
 require_once __DIR__ . '/vendor/autoload.php';
 
-$payDay = new PayDay();
+$startDate = new \DateTime('now', new \DateTimeZone(PayDay::APP_TIMEZONE));
+
+$payDay = new PayDay($startDate);
 $days = $payDay->calculatePayDay();
 $days->rewind();
 while ($days->valid()) {
