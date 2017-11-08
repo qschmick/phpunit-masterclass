@@ -17,12 +17,13 @@ namespace In2it\Masterclass;
 class HelloWorld
 {
     /**
-     * This method returns the string "Hello World!"
+     * This method returns the string "Hello <argument>!"
      *
+     * @param string $argument
      * @return string
      */
-    public function sayHello(): string
+    public function sayHello(string $argument = 'World'): string
     {
-        return 'Hello World!';
+        return 'Hello ' . $argument . '!';
     }
 }
