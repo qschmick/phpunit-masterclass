@@ -31,4 +31,17 @@ class HelloWorldTest extends TestCase
         $this->assertSame($expectedOutput, $helloWorld->sayHello(),
             'Expected response does not match "Hello World!"');
     }
+
+    /**
+     * Testing the app returns the string "Hello unit testers!"
+     *
+     * @covers \In2it\Masterclass\HelloWorld::sayHello
+     */
+    public function testAppOutputsHelloArgument()
+    {
+        $helloWorld = new HelloWorld();
+        $expectedOutput = 'Hello unit testers!';
+        $this->assertSame($expectedOutput, $helloWorld->sayHello('unit testers'),
+            'Expected response does not match "Hello unit testers!"');
+    }
 }
