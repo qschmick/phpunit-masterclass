@@ -207,9 +207,27 @@ class TaskServiceTest extends TestCase
         }
     }
 
+    /**
+     * Mark task as done in the overview list
+     *
+     * @covers TaskService::MarkTaskDone
+     */
     public function testServiceCanMarkTaskAsDone()
     {
-        // Mark task as done in the overview list
+        $taskService = new TaskService($this->taskGateway);
+        $task = $taskService->findTask('789');
+
+        $this->assertTrue($taskService->MarkTaskDone($task));
+
+        $tasks = $taskService->getAllTasks();
+
+        $tasks->rewind();
+        while ($tasks->valid()) {
+            if ('789' === $tasks->current()->getId()) {
+                $this->assertTrue($tasks->current()->isDone());
+            }
+            $tasks->next();
+        }
     }
 
     public function testServiceCanRemoveTaskMarkedAsDone()
