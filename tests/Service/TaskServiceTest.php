@@ -11,7 +11,7 @@
  * @see https://www.in2it.be/training-courses/phpunit-masterclass/
  */
 
-namespace In2it\Masterclass\Test;
+namespace In2it\Masterclass\Test\Service;
 
 use In2it\Masterclass\Service\TaskService;
 use In2it\Masterclass\Model\TaskEntityInterface;
