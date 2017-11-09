@@ -13,7 +13,9 @@
 
 namespace In2it\Masterclass\Test;
 
-
+use In2it\Masterclass\Service\TaskService;
+use In2it\Masterclass\Model\TaskEntityInterface;
+use In2it\Masterclass\Model\TaskGatewayInterface;
 use PHPUnit\Framework\TestCase;
 
 class TaskServiceTest extends TestCase
@@ -177,6 +179,18 @@ class TaskServiceTest extends TestCase
         $taskService->addTask($taskEntity);
 
         $this->assertCount(4, $taskService->getAllTasks());
+    }
+
+    /**
+     * Find a task by given task ID
+     *
+     * @covers TaskService::findTask
+     */
+    public function testServiceCanFindTask()
+    {
+        $taskService = new TaskService($this->taskGateway);
+        $taskEntity = $taskService->findTask('123');
+        $this->assertSame('123', $taskEntity->getId());
     }
 
     /**
