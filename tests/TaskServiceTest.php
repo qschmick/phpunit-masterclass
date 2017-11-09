@@ -155,9 +155,28 @@ class TaskServiceTest extends TestCase
         }
     }
 
+    /**
+     * Create a new task (label and description)
+     *
+     * @covers TaskService::addTask
+     */
     public function testServiceCanAddNewTask()
     {
-        // Create a new task (label and description)
+        $taskEntity = $this->getMockBuilder(TaskEntityInterface::class)
+            ->setMethods(['getId', 'getLabel', 'getDescription', 'isDone', 'getCreated', 'getModified'])
+            ->getMock();
+
+        $taskEntity->method('getId')->willReturn('147');
+        $taskEntity->method('getLabel')->willReturn('Task #147');
+        $taskEntity->method('getDescription')->willReturn('#147: This is task 147');
+        $taskEntity->method('isDone')->willReturn(false);
+        $taskEntity->method('getCreated')->willReturn(new \DateTime('2017-05-01 07:53:24'));
+        $taskEntity->method('getModified')->willReturn(new \DateTime('2017-05-01 08:16:53'));
+
+        $taskService = new TaskService($this->taskGateway);
+        $taskService->addTask($taskEntity);
+
+        $this->assertCount(4, $taskService->getAllTasks());
     }
 
     public function testServiceCanUpdateExistingTask()
