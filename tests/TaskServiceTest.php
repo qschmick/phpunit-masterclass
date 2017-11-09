@@ -179,9 +179,32 @@ class TaskServiceTest extends TestCase
         $this->assertCount(4, $taskService->getAllTasks());
     }
 
+    /**
+     * Update an existing task
+     *
+     * @covers TaskService::updateTask
+     * @depends testServiceCanFindTask
+     */
     public function testServiceCanUpdateExistingTask()
     {
-        // Update an existing task
+        $taskService = new TaskService($this->taskGateway);
+        $taskEntity = $taskService->findTask('123');
+
+        $label = 'Task #123: Update from service';
+        $taskEntity->setLabel($label);
+
+        $this->assertTrue($taskService->updateTask($taskEntity));
+
+        $tasks = $taskService->getAllTasks();
+        $this->assertCount(3, $tasks);
+
+        $tasks->rewind();
+        while ($tasks->valid()) {
+            if ('123' === $tasks->current()->getId()) {
+                $this->assertSame($label, $tasks->current()->getLabel());
+            }
+            $tasks->next();
+        }
     }
 
     public function testServiceCanMarkTaskAsDone()
