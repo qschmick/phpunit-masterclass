@@ -16,6 +16,8 @@ namespace In2it\Masterclass;
 
 class LoginTest extends \PHPUnit_Extensions_Selenium2TestCase
 {
+    const SCREENSHOT_PATH = __DIR__ . '/_errors';
+
     protected function setUp()
     {
         parent::setUp();
@@ -35,6 +37,12 @@ class LoginTest extends \PHPUnit_Extensions_Selenium2TestCase
         $expectedTitle = 'The easy task manager';
         $title = $this->byTag('h1')->text();
         $this->assertEquals($expectedTitle, $title);
+
+        // Capture a screenshot in case the test fails
+        file_put_contents(
+            self::SCREENSHOT_PATH . '/weCanReachWebsite.jpg',
+            $this->currentScreenshot()
+        );
     }
 
     public function testLoginFailsForUnknownCredentials()
@@ -47,6 +55,12 @@ class LoginTest extends \PHPUnit_Extensions_Selenium2TestCase
         $expectedError = 'Invalid username and/or password provided';
         $errorMessage = $this->byClassName('errors')->byTag('li')->text();
         $this->assertSame($expectedError, $errorMessage);
+
+        // Capture a screenshot in case the test fails
+        file_put_contents(
+            self::SCREENSHOT_PATH . '/loginFailsForUnknownCredentials.jpg',
+            $this->currentScreenshot()
+        );
     }
 
     public function testLoginSucceedsWithCorrectCredentials()
@@ -60,6 +74,12 @@ class LoginTest extends \PHPUnit_Extensions_Selenium2TestCase
         $expectedProjectTitle = 'Acceptance testing at phpworld';
         $projectTitle = $this->byClassName('tableRow')->byTag('a')->text();
         $this->assertSame($expectedProjectTitle, $projectTitle);
+
+        // Capture a screenshot in case the test fails
+        file_put_contents(
+            self::SCREENSHOT_PATH . '/loginSucceedsWithCorrectCredentials.jpg',
+            $this->currentScreenshot()
+        );
     }
 
     public function testCanListTasksInProject()
@@ -89,5 +109,25 @@ class LoginTest extends \PHPUnit_Extensions_Selenium2TestCase
         $expectedTasks = 8;
         $tasks = $this->elements($this->using('className')->value('tableRow'));
         $this->assertCount($expectedTasks, $tasks);
+
+        // Capture a screenshot in case the test fails
+        file_put_contents(
+            self::SCREENSHOT_PATH . '/canListTasksInProject.jpg',
+            $this->currentScreenshot()
+        );
+    }
+
+    public function testCannotVisitProjectsBeforeLogin()
+    {
+        $this->url('http://www.theialive.com/project');
+        $expectedProjectTitle = 'Sign in your Theialive account';
+        $projectTitle = $this->byTag('h1')->text();
+        $this->assertSame($expectedProjectTitle, $projectTitle);
+
+        // Capture a screenshot in case the test fails
+        file_put_contents(
+            self::SCREENSHOT_PATH . '/cannotVisitProjectBeforeLogin.jpg',
+            $this->currentScreenshot()
+        );
     }
 }
