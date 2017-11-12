@@ -36,4 +36,16 @@ class LoginTest extends \PHPUnit_Extensions_Selenium2TestCase
         $title = $this->byTag('h1')->text();
         $this->assertEquals($expectedTitle, $title);
     }
+
+    public function testLoginFailsForUnknownCredentials()
+    {
+        $this->url('http://www.theialive.com/login');
+        $this->byName('email')->value('foo+12345654321@bar.com');
+        $this->byName('password')->value('thisisatest');
+        $this->byTag('form')->submit();
+
+        $expectedError = 'Invalid username and/or password provided';
+        $errorMessage = $this->byClassName('errors')->byTag('li')->text();
+        $this->assertSame($expectedError, $errorMessage);
+    }
 }
