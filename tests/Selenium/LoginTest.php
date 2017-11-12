@@ -48,4 +48,46 @@ class LoginTest extends \PHPUnit_Extensions_Selenium2TestCase
         $errorMessage = $this->byClassName('errors')->byTag('li')->text();
         $this->assertSame($expectedError, $errorMessage);
     }
+
+    public function testLoginSucceedsWithCorrectCredentials()
+    {
+        $this->url('http://www.theialive.com/login');
+        $this->byName('email')->value('dragonbe+phpworld@gmail.com');
+        $this->byName('password')->value('test1234');
+        $this->byTag('form')->submit();
+
+        $this->byLinkText('projects');
+        $expectedProjectTitle = 'Acceptance testing at phpworld';
+        $projectTitle = $this->byClassName('tableRow')->byTag('a')->text();
+        $this->assertSame($expectedProjectTitle, $projectTitle);
+    }
+
+    public function testCanListTasksInProject()
+    {
+        $this->url('http://www.theialive.com/login');
+        $this->byName('email')->value('dragonbe+phpworld@gmail.com');
+        $this->byName('password')->value('test1234');
+        $this->byTag('form')->submit();
+
+        $this->byLinkText('projects')->click();
+
+        $webdriver = $this;
+        $taskLink = $this->waitUntil(function() use($webdriver){
+            try {
+                $element = $webdriver->byLinkText('Acceptance testing at phpworld');
+                if ($element->displayed()) {
+                    return $element;
+                }
+                return null;
+            } catch (\Exception $ex) {
+                return null;
+            }
+        }, 3000);
+
+        $taskLink->click();
+
+        $expectedTasks = 8;
+        $tasks = $this->elements($this->using('className')->value('tableRow'));
+        $this->assertCount($expectedTasks, $tasks);
+    }
 }
