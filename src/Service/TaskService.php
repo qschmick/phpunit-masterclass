@@ -9,9 +9,28 @@
 namespace In2it\Masterclass\Service;
 
 use In2it\Masterclass\Model\TaskEntityInterface;
+use In2it\Masterclass\Model\TaskGatewayInterface;
 
 class TaskService implements TaskEntityInterface
 {
+    /**
+     * @var TaskGatewayInterface $tasks
+     */
+    protected $tasks;
+
+    /**
+     * @var String $label
+     */
+    protected $label;
+
+    /**
+     * @var bool $isDone
+     */
+    protected $isDone;
+
+    public function __construct($gateway){
+        $this->tasks = $gateway;
+    }
     /**
      * Get the ID for this task entity
      *
@@ -29,7 +48,15 @@ class TaskService implements TaskEntityInterface
      */
     public function getLabel(): string
     {
-        // TODO: Implement getLabel() method.
+        return $this->label;
+    }
+
+    /**
+     * @param String $label
+     */
+    public function setLabel(String $label)
+    {
+        $this->label = $label;
     }
 
     /**
@@ -49,7 +76,11 @@ class TaskService implements TaskEntityInterface
      */
     public function isDone(): bool
     {
-        // TODO: Implement isDone() method.
+        return $this->isDone;
+    }
+
+    public function setDone(bool $isDone) {
+        $this->isDone = $isDone;
     }
 
     /**
@@ -72,4 +103,48 @@ class TaskService implements TaskEntityInterface
         // TODO: Implement getModified() method.
     }
 
+    /**
+     * @return \Iterator
+     */
+    public function getAllTasks(): \Iterator{
+        return $this->tasks->fetchAll();
+    }
+
+    /**
+     * @param TaskEntityInterface $taskEntity
+     */
+    public function addTask(TaskEntityInterface $taskEntity) {
+        $this->tasks->add($taskEntity);
+    }
+
+    /**
+     * @param string $id
+     * @return TaskEntityInterface|null
+     */
+    public function findTask(string $id) {
+        return $this->tasks->find($id);
+    }
+
+    /**
+     * @param TaskEntityInterface $taskEntity
+     * @return bool
+     */
+    public function updateTask(TaskEntityInterface $taskEntity) {
+        return $this->tasks->update($taskEntity);
+    }
+
+    /**
+     * @param TaskEntity $taskEntity
+     * @return bool
+     */
+    public function MarkTaskDone($taskEntity) {
+        if($taskEntity->isDone()) {
+            throw new \DomainException('Cannot mark done task as done.');
+        }
+        return $this->tasks->update($taskEntity);
+    }
+
+    public function removeTask(TaskEntityInterface $taskEntity) {
+        return $this->tasks->remove($taskEntity);
+    }
 }
